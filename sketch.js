@@ -13,6 +13,7 @@ function setup() {
     setFrameRate(60);
     flowfield = new Flowfield(20);
     path = new Path(width,height);
+    newPath();
 }
 
 function draw() {
@@ -29,6 +30,8 @@ function draw() {
     }
 }
 
+
+
 function keyPressed() {
 
     for(var i = 0; i < key; i++){
@@ -44,5 +47,15 @@ function keyPressed() {
 
 function mousePressed() {
     flowfield.init();
-    path.init();
+   // path.init();
+   newPath();
+}
+
+function newPath(){
+    path = new Path();
+    path.addPoint(-20,height/2);
+    path.addPoint(random(0,width/2),random(0,height));
+    path.addPoint(random(width/2,width),random(0,height));
+    path.addPoint(width+40, height/2);
+
 }
