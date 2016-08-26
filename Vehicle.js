@@ -119,27 +119,48 @@ var Vehicle = function(x, y, maxSpeed, maxForce, width, height) {
     }
 
     this.followPath = function(p) {
-
+        console.log(p);
 
         var predict = this.velocity.copy();
         predict.normalize();
         predict.mult(50);
         var predictLoc = p5.Vector.add(this.position, predict);
 
+
+        var normal = null;
+        var target = null;
+        var record = 1000000;
         // Look at the line segment
-        var a = p.start;
-        var b = p.end;
-        var normalPoint = this.getNormalPoint(predictLoc, a, b);
+        for (var i = 0; i < p.points.length-1; i++) {
 
-        var dir = p5.Vector.sub(b, a);
-        dir.normalize();
-        //dir.mult(predict.mag()); 
-        dir.mult(10)
-        var target = p5.Vector.add(normalPoint, dir);
+            var a = p.points[i];
+            var b = p.points[i + 1];
+            var normalPoint = this.getNormalPoint(predictLoc, a, b);
 
+            if (normalPoint.x < a.x || normalPoint.x > b.x) {
+                normalPoint = b.copy();
+            }
 
-        var distance = p5.Vector.dist(predictLoc, normalPoint);
-        if (distance > p.radius) {
+            var distance = p5.Vector.dist(predictLoc, normalPoint);
+
+            // if (distance > p.radius) {
+            //     this.seek(target);
+            // }
+
+            if (distance < record) {
+                record = distance;
+                normal = normalPoint;
+
+                var dir = p5.Vector.sub(b, a);
+                dir.normalize();
+                dir.mult(10);
+                target = normal.copy();
+                target.add(dir);
+
+            }
+        }
+
+        if (record > p.radius && target !== null) {
             this.seek(target);
         }
 
