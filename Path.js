@@ -26,8 +26,6 @@ var Path = function(width, height) {
     }
 
     this.display = function() {
-
-
         stroke(0);
         noFill();
         beginShape();
@@ -44,7 +42,5 @@ var Path = function(width, height) {
             vertex(this.points[i].x,this.points[i].y);
         }
         endShape();
-
     }
-
 }

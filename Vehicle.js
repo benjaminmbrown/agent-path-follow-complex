@@ -36,7 +36,6 @@ var Vehicle = function(x, y, maxSpeed, maxForce, width, height) {
         var steer = p5.Vector.sub(desired, this.velocity);
         steer.limit(this.maxForce);
         this.applyForce(steer);
-
     }
 
 
@@ -85,13 +84,11 @@ var Vehicle = function(x, y, maxSpeed, maxForce, width, height) {
 
 
     this.predictSelfFuturePosition = function() {
-        console.log('future');
         var predict = this.velocity.copy();
         predict.normalize();
         predict.mult(25); ///look 25 pixels ahead
 
         return p5.Vector.add(this.position, predict);
-
     }
 
     this.getFuturePosition = function(target) {
@@ -126,15 +123,14 @@ var Vehicle = function(x, y, maxSpeed, maxForce, width, height) {
         predict.mult(50);
         var predictLoc = p5.Vector.add(this.position, predict);
 
-
         var normal = null;
         var target = null;
         var record = 1000000;
-        // Look at the line segment
         for (var i = 0; i < p.points.length-1; i++) {
 
             var a = p.points[i];
             var b = p.points[i + 1];
+
             var normalPoint = this.getNormalPoint(predictLoc, a, b);
 
             if (normalPoint.x < a.x || normalPoint.x > b.x) {
@@ -143,9 +139,6 @@ var Vehicle = function(x, y, maxSpeed, maxForce, width, height) {
 
             var distance = p5.Vector.dist(predictLoc, normalPoint);
 
-            // if (distance > p.radius) {
-            //     this.seek(target);
-            // }
 
             if (distance < record) {
                 record = distance;
@@ -156,7 +149,6 @@ var Vehicle = function(x, y, maxSpeed, maxForce, width, height) {
                 dir.mult(10);
                 target = normal.copy();
                 target.add(dir);
-
             }
         }
 
@@ -164,6 +156,7 @@ var Vehicle = function(x, y, maxSpeed, maxForce, width, height) {
             this.seek(target);
         }
 
+        //draw line
         fill(200);
         stroke(200);
         line(this.position.x, this.position.y, predictLoc.x, predictLoc.y);
@@ -172,7 +165,7 @@ var Vehicle = function(x, y, maxSpeed, maxForce, width, height) {
         // Draw normal location
         fill(200);
         stroke(200);
-        line(predictLoc.x, predictLoc.y, normalPoint.x, normalPoint.y);
+        line(predictLoc.x, predictLoc.y, normal.x, normal.y);
         ellipse(normalPoint.x, normalPoint.y, 4, 4);
         stroke(200);
         if (distance > p.radius) fill(255, 0, 0);
